@@ -1,0 +1,18 @@
+body {
+    background: url(launcher_bg.jpg) no-repeat;
+    background-size: cover;
+    overflow-y: hidden;
+    font: 600 16px/18px "Open Sans", sans-serif;
+}
+
+.login-wrap {
+    margin-left: 5%;
+    margin-top: 5%;
+    width: 35em;
+    height: 38em;
+    position: relative;
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 1),
+      0 17px 50px 0 rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    background: rgba(40, 70, 101, 0.7);
+}

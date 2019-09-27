@@ -1,0 +1,483 @@
+openapi: 3.0.1
+info:
+  title: Far Cry Online Platform Restful API
+  description: >-
+    An application server that surfaces a RESTful API to login, to load and save
+    player settings, to submit frags of game sessions.'
+  contact:
+    email: thuanhong357@gmail.com
+  version: "1.0.0-oas3"
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+servers:
+  - url: 'https://dry-eyrie-39715.herokuapp.com/api'
+tags:
+  - name: match
+    description: Everything about your match
+  - name: player
+    description: Everything about your player
+paths:
+  /match:
+    post:
+      tags:
+        - match
+      summary: Create a new match
+      operationId: postMatch
+      requestBody:
+        description: Match object that needs to be added to the matchs
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_time:
+                  type: string
+                game_mode:
+                  type: string
+                map_name:
+                  type: string
+              example:
+                start_time: 2019-09-11 16-02-33
+                game_mode: FFA
+                map_name: mp_suft
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  record:
+                    $ref: '#/components/schemas/Matchs'
+                example:
+                  message: Succesful
+                  statusCode: 200
+                  record:
+                    match_id: 1
+                    start_time: null
+                    end_time: null
+                    game_mode: FFA
+                    map_name: mp_suft
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  error_detail:
+                    type: string
+                example:
+                  message: Error
+                  statusCode: 400
+                  error_detail: Not Found
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/match/end/{match_id}':
+    post:
+      tags:
+        - match
+      summary: Update end time of match
+      operationId: postEndTime
+      parameters:
+        - name: match_id
+          in: path
+          description: ID of match to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Match object that needs to be added to the matchs
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                end_time:
+                  type: string
+              example:
+                end_time: 2019-09-11 16-02-33
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        '400':
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /match/frags:
+    post:
+      tags:
+        - match
+      summary: Post data of frag to database
+      operationId: postFrags
+      requestBody:
+        description: Frags object that needs to be added to the match_frags
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchFrags'
+              example:
+                match_id: 1
+                frag_time: 2019-09-11 16-02-33
+                killer_name: Neo
+                victim_name: Anderson
+                weapon_code: Snipper
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: string
+                  frags:
+                    type: object
+        '400':
+          description: Invalid tag value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: string
+                  frags:
+                    type: object
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /player:
+    post:
+      tags:
+        - player
+      summary: Create new player
+      operationId: createPlayer
+      requestBody:
+        description: Frags object that needs to be added to the match_frags
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  respond:
+                    type: object
+                    $ref: '#/components/schemas/Player'
+        '400':
+          description: Invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  error_detail:
+                    type: string
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /player/login:
+    post:
+      tags:
+        - player
+      summary: Check login from launcher
+      operationId: checkLogin
+      requestBody:
+        description: post info of user include username and password hash code
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  result:
+                    type: object
+                    $ref: '#/components/schemas/Player'
+        '400':
+          description: Invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  /player/verification:
+    get:
+      tags:
+        - player
+      summary: Verifytion email
+      operationId: getVerify
+      parameters:
+        - name: playerID
+          in: query
+          description: player id
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: query
+          description: token
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content: {}
+        '400':
+          description: Invalid
+          content: {}
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+  '/player/setting/{playerID}':
+    get:
+      tags:
+        - player
+      summary: get setting of player on database and update setting on local
+      operationId: getSettingOfPlayer
+      parameters:
+        - name: playerID
+          in: path
+          description: player id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  result:
+                    type: object
+                    $ref: '#/components/schemas/PlayerSetting'
+        '400':
+          description: Invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+    post:
+      tags:
+        - player
+      summary: update setting of player on database
+      operationId: postSettingOfPlayer
+      parameters:
+        - name: playerID
+          in: path
+          description: player id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: post info of user include username and password hash code
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                system:
+                  type: string
+                game:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+        '400':
+          description: Invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  statusCode:
+                    type: integer
+                  error:
+                    type: string
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+components:
+  schemas:
+    Matchs:
+      type: object
+      properties:
+        start_time:
+          type: string
+        end_time:
+          type: string
+        game_mode:
+          type: string
+        map_name:
+          type: string
+      xml:
+        name: Matchs
+    MatchFrags:
+      type: object
+      properties:
+        match_id:
+          type: integer
+          format: int64
+        frag_time:
+          type: string
+        killer_name:
+          type: string
+        victim_name:
+          type: string
+        weapon_code:
+          type: string
+      xml:
+        name: MatchFrags
+    Player:
+      type: object
+      properties:
+        player_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        emailVerified:
+          type: boolean
+      xml:
+        name: Player
+    PlayerSetting:
+      type: object
+      properties:
+        player_id:
+          type: integer
+        system:
+          type: string
+        game:
+          type: string
+      xml:
+        name: PlayerSetting
+    Token:
+      type: object
+      properties:
+        player_id:
+          type: integer
+        token:
+          type: string
+      xml:
+        name: Token
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+          scopes:
+            'write:pets': modify pets in your account
+            'read:pets': read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

@@ -1,0 +1,12 @@
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.ant-form-item-label > label{
+  color:#B6B6B6 !important;
+}
