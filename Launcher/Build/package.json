@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.22.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "chokidar": "latest",
     "electron-packager": "^14.0.5",
